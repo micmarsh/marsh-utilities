@@ -5,6 +5,53 @@ Various super-general Clojure utilities I've found useful at one point or anothe
 ## Usage
 `[mutils "0.1.0-SNAPSHOT"]`
 
+## Function Composition
+`mutils.fn.compose` features many variations on `comp`
+
+### Predicate Compositions
+```clojure
+;; instead of
+(defn person? [map]
+  (and (:name map) (:address map)))
+;; try
+(def person? (and-comp :name :address))
+
+;; instead of
+(defn odd-or-neg? [num]
+  (or (odd? num) (neg? num)))
+;; use
+(def odd-or-neg? (or-comp odd? neg?))
+```
+
+### Nil-Safe Composition
+```clojure
+;; instead of
+(defn safe-chain [x]
+  (some-> x
+          (unsafe-fn1)
+          (unsafe-fn3)
+          (unsafe-fn3)))
+;; use
+(def safe-chain
+  (some-comp unsafe-fn3 unsafe-fn2 unsafe-fn1))
+```
+
+### Composition w/ Haskell-ish Currying
+```clojure
+;; for those tired of typing this sort of thing
+(def total-programmer-ages
+  (comp (partial reduce +)
+        (partial map :age)
+        (partial filter programmer?)))
+;; a handy macro
+(def total-programmer-ages
+  (comp' (reduce +)
+         (map :age)
+         (filter programmer?)))
+```
+Transducers are probably better than that^, but whatever.
+
+
 ## Lazier Sequence Operation(s)
 Although it returns a lazy sequence, `mapcat` is not as lazy as it could be (more detail [here](http://stackoverflow.com/questions/21943577/mapcat-breaking-the-lazyness)), so `mutils.seq.lazy` provides a new `mapcat` that won't force its sequence argument.
 
@@ -25,7 +72,7 @@ Although it returns a lazy sequence, `mapcat` is not as lazy as it could be (mor
 ## Tree Utilities
 
 ### Breadth-First
-Normal `tree-seq`s use depth-first traversal, so `mutils.seq.tree/tree-seq` allows you to optional specify a breadth-first traversal:
+Normal `tree-seq`s use depth-first traversal, so `mutils.seq.tree/tree-seq` allows you to optionally specify a breadth-first traversal:
 ```clojure
 ;; Example data from http://clojuredocs.org/clojure.core/tree-seq#example-542692ccc026201cdc326c82
 
