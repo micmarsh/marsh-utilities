@@ -3,18 +3,21 @@
 Various super-general Clojure utilities I've found useful at one point or another. Will probably get a less self-centered name if this is useful anywhere else.
 
 ## Usage
-(not on clojars yet)
+`[mutils "0.1.0-SNAPSHOT"]`
 
 ## Lazier Sequence Operation(s)
-Although it returns a lazy sequence, `mapcat` is not as lazy as it could be (more detail, or at least interesting reading [here](http://stackoverflow.com/questions/21943577/mapcat-breaking-the-lazyness)), so `mutils.seq.lazy` provides a new `mapcat` that won't force its sequence argument.
+Although it returns a lazy sequence, `mapcat` is not as lazy as it could be (more detail [here](http://stackoverflow.com/questions/21943577/mapcat-breaking-the-lazyness)), so `mutils.seq.lazy` provides a new `mapcat` that won't force its sequence argument.
 
 ```clojure
 (defn hello []
   (repeatedly 3 #(do (println \"hello\") \"hello\")))
+
 (def result (clojure.core/mapcat identity (hello)))
 ;; prints \"hello\" three times, assigns result
+
 (def result (mutils.seq.lazy/mapcat identity (hello)))
 ;; doesn't print anything, assigns result
+
 (first result) ;; => \h
 ;; prints \"hello\" only once"
 ```
