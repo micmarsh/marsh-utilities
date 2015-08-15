@@ -5,6 +5,34 @@ Various super-general Clojure utilities I've found useful at one point or anothe
 ## Usage
 `[mutils "0.1.0-SNAPSHOT"]`
 
+## Macros
+### Better "case" macro
+Ever been frustrasted by the way `case` only accepts literals? Try `mutils.macro.control/case`!
+
+```clojure
+  (def one 1)
+  (def two 2)
+
+  (clojure.core/case 1
+     one "one"
+     two "two"
+     (inc 2) "three"
+     4 "four") ; => throws IllegalArgumentException
+
+  (mutils.macro.control/case 1
+     one "one"
+     two "two"
+     (inc two) "three"
+     4 "four") ; => "one"
+
+  (mutils.macro.control/case 3
+     one "one"
+     two "two"
+     (inc two) "three"
+     4 "four") ; => "three"
+```
+
+
 ## Function Composition
 `mutils.fn.compose` features many variations on `comp`
 
@@ -57,16 +85,16 @@ Although it returns a lazy sequence, `mapcat` is not as lazy as it could be (mor
 
 ```clojure
 (defn hello []
-  (repeatedly 3 #(do (println \"hello\") \"hello\")))
+  (repeatedly 3 #(do (println "hello") "hello")))
 
 (def result (clojure.core/mapcat identity (hello)))
-;; prints \"hello\" three times, assigns result
+;; prints "hello" three times, assigns result
 
 (def result (mutils.seq.lazy/mapcat identity (hello)))
 ;; doesn't print anything, assigns result
 
 (first result) ;; => \h
-;; prints \"hello\" only once"
+;; prints "hello" only once
 ```
 
 ## Tree Utilities

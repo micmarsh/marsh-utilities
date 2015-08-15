@@ -13,7 +13,7 @@
     (def result (mutils.seq.lazy/mapcat identity (hello)))
     ;; doesn't print anything, assigns result
 
-    (first result) => \h
+    (first result) => \\h
     ;; prints \"hello\" only once"
   [f coll]
   (for [item coll x (f item)] x))
