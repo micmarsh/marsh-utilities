@@ -30,4 +30,9 @@
         (some-> arg i h g f)))))
 
 (defmacro comp' [& exprs]
-  `(comp ~@(map #(list* clojure.core/partial %) exprs)))
+  `(comp ~@(map
+            (fn [form]
+              (if (list? form)
+                (list* clojure.core/partial form)
+                form))
+            exprs)))
